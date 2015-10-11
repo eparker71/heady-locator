@@ -2,6 +2,7 @@ var gulp = require('gulp');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var minifycss = require('gulp-minify-css');
+var jshint = require('gulp-jshint');
 
 gulp.task('buildApp', function(){
   return gulp.src('src/*.js')
@@ -37,4 +38,12 @@ gulp.task('moveHTML', function(){
     .pipe(gulp.dest('app'));
 });
 
-gulp.task('build', ['buildApp', 'buildVendor', 'buildCSS', 'moveHTML', 'movePHP']);
+gulp.task('jshint', function(){
+  return gulp.src(['src/*.js'])
+    .pipe(jshint())
+    .pipe(jshint.reporter('jshint-stylish'));
+});
+
+//gulp.task('test', ['karma', 'jshint']);
+
+gulp.task('build', ['jshint', 'buildApp', 'buildVendor', 'buildCSS', 'moveHTML', 'movePHP']);

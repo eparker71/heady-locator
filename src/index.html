@@ -9,7 +9,7 @@
 	<script src="vendors.js" type="text/javascript"></script>
 	<script src="app.js" type="text/javascript"></script>
   </head>
-  <body ng-controller="LocationController">
+  <body ng-controller="LocationController as lc">
   	<div class="container-fluid">
 		<h3>Where to buy Heady Topper</h3>
 		<div id="map"></div>
@@ -27,14 +27,14 @@
 			<div class="form-group">
 				<input id="searchinput" class="form-control" type="search" placeholder="Search by delivery day..." />
 			</div>
-			<span>Number of locations: {{markers.length}}</span>
+			<span>Number of locations: {{lc.markers.length}}</span>
 			<div id="searchlist" class="list-group">
-				<div class="list-group-item" ng-repeat="marker in markers | orderBy :'title'">
-					 <a href="#" ng-click="openInfoWindow($event, marker)">{{marker.title | limitTo: 10 }}{{marker.title.length > 10 ? '...' : ''}}</a>&nbsp;&nbsp;
+				<div class="list-group-item" ng-repeat="marker in lc.markers | orderBy :'title'">
+					 <a href="#" ng-click="lc.openInfoWindow($event, marker)">{{marker.title | limitTo: 10 }}{{marker.title.length > 10 ? '...' : ''}}</a>&nbsp;&nbsp;
 					 <button type="button" class="btn btn-default btn-xs" ng-click="displayRoute(marker)">
 					 Map Route
 					 </button>
-					 <span class="badge">{{getShortDay(marker.delivery)}}</span>
+					 <span class="badge">{{lc.getShortDay(marker.delivery)}}</span>
 				</div>
 			</div>
 		</form>
