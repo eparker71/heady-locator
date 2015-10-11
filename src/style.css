@@ -1,0 +1,33 @@
+html,
+body {
+  height: 100%;
+}
+#map {
+  min-width: 250px;
+  width: 80%;
+  min-height: 350px;
+  height: 80%;
+  border: 1px solid blue;
+  text-align: center;
+}
+#map-canvas {
+	height:480px;
+	width:650px;
+	margin-bottom: 1em;
+}
+.delivery {
+	font-weight: bold;
+}
+.infoWindowContent {
+	font-size:  14px !important;
+	border-top: 1px solid #ccc;
+	padding-top: 10px;
+}
+h2 {
+	margin-bottom:0;
+	margin-top: 0;
+}
+
+ul {
+	list-style-type: none;
+}

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="locationApp">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>Geocoding service</title>
+    <link rel="stylesheet" href="main.css" /> 
+    <script src="http://maps.googleapis.com/maps/api/js?key=" type="text/javascript"></script>
+	<script src="vendors.js" type="text/javascript"></script>
+	<script src="app.js" type="text/javascript"></script>
+  </head>
+  <body ng-controller="LocationController">
+  	<div class="container-fluid">
+		<h3>Where to buy Heady Topper</h3>
+		<div id="map"></div>
+		<br />
+		<div class="panel panel-info">
+			<div class="panel-heading">Route Info</div>
+				<div class="panel-body">
+					Location: <span ng-bind="storeName"></span><br />
+					Distance: <span ng-bind="distance"></span><br />
+					Duration: <span ng-bind="duration"></span>
+				</div>
+		</div>
+	
+		<form role="form">
+			<div class="form-group">
+				<input id="searchinput" class="form-control" type="search" placeholder="Search by delivery day..." />
+			</div>
+			<span>Number of locations: {{markers.length}}</span>
+			<div id="searchlist" class="list-group">
+				<div class="list-group-item" ng-repeat="marker in markers | orderBy :'title'">
+					 <a href="#" ng-click="openInfoWindow($event, marker)">{{marker.title | limitTo: 10 }}{{marker.title.length > 10 ? '...' : ''}}</a>&nbsp;&nbsp;
+					 <button type="button" class="btn btn-default btn-xs" ng-click="displayRoute(marker)">
+					 Map Route
+					 </button>
+					 <span class="badge">{{getShortDay(marker.delivery)}}</span>
+				</div>
+			</div>
+		</form>
+	</div>
+	
+	<script>
+        $('#searchlist').btsListFilter('#searchinput', {itemChild: 'span'});
+    </script>
+  </body>
+</html>
