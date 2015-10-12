@@ -3,9 +3,10 @@ var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var minifycss = require('gulp-minify-css');
 var jshint = require('gulp-jshint');
+var Server = require('karma').Server;
 
 gulp.task('buildApp', function(){
-  return gulp.src('src/*.js')
+  return gulp.src('src/js/**/*.js')
     .pipe(concat('app.js'))
     .pipe(gulp.dest('app'));
 });
@@ -22,7 +23,7 @@ gulp.task('buildVendor', function(){
 gulp.task('buildCSS', function(){
   return gulp.src([
     'bower_components/bootstrap/dist/css/bootstrap.css',
-    'src/*.css'])
+    'src/css/**/*.css'])
   .pipe(concat('main.css'))
   .pipe(minifycss())
   .pipe(gulp.dest('app'));
@@ -34,16 +35,25 @@ gulp.task('movePHP', function(){
 });
 
 gulp.task('moveHTML', function(){
-  return gulp.src('src/*.html')
+  return gulp.src('src/**/*.html')
     .pipe(gulp.dest('app'));
 });
 
+gulp.task('build', ['buildApp', 'buildVendor', 'buildCSS', 'moveHTML', 'movePHP']);
+
 gulp.task('jshint', function(){
-  return gulp.src(['src/*.js'])
+  return gulp.src(['src/js/**/*.js'])
     .pipe(jshint())
     .pipe(jshint.reporter('jshint-stylish'));
 });
 
-//gulp.task('test', ['karma', 'jshint']);
+gulp.task('karma', function (done) {
+  new Server({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true
+  }, done).start();
+});
 
-gulp.task('build', ['jshint', 'buildApp', 'buildVendor', 'buildCSS', 'moveHTML', 'movePHP']);
+gulp.task('test', ['karma', 'jshint']);
+
+

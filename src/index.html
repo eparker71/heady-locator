@@ -28,15 +28,15 @@
 				<input id="searchinput" class="form-control" type="search" placeholder="Search by delivery day..." />
 			</div>
 			<span>Number of locations: {{lc.markers.length}}</span>
-			<div id="searchlist" class="list-group">
-				<div class="list-group-item" ng-repeat="marker in lc.markers | orderBy :'title'">
+			<ul id="searchlist" class="list-group">
+				<li class="list-group-item" ng-repeat="marker in lc.markers | orderBy :'title'">
 					 <a href="#" ng-click="lc.openInfoWindow($event, marker)">{{marker.title | limitTo: 10 }}{{marker.title.length > 10 ? '...' : ''}}</a>&nbsp;&nbsp;
 					 <button type="button" class="btn btn-default btn-xs" ng-click="lc.displayRoute(marker)">
 					 Map Route
 					 </button>
 					 <span class="badge">{{lc.getShortDay(marker.delivery)}}</span>
-				</div>
-			</div>
+				</li>
+			</ul>
 		</form>
 	</div>
 	
