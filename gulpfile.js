@@ -3,7 +3,7 @@ var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var minifycss = require('gulp-minify-css');
 var jshint = require('gulp-jshint');
-var Server = require('karma').Server;
+//var Server = require('karma').Server;
 
 gulp.task('buildApp', function(){
   return gulp.src('src/js/**/*.js')
@@ -47,13 +47,13 @@ gulp.task('jshint', function(){
     .pipe(jshint.reporter('jshint-stylish'));
 });
 
-gulp.task('karma', function (done) {
-  new Server({
-    configFile: __dirname + '/karma.conf.js',
-    singleRun: true
-  }, done).start();
-});
+// gulp.task('karma', function (done) {
+//   new Server({
+//     configFile: __dirname + '/karma.conf.js',
+//     singleRun: true
+//   }, done).start();
+// });
 
-gulp.task('test', ['karma', 'jshint']);
+gulp.task('test', ['jshint']);
 
 
