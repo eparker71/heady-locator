@@ -1,0 +1,7 @@
+Both of these are AWS lambda fucntions. 
+
+update_locations can also be run from the command line, you just need to uncommnet some lines in the file.
+
+getLocations.js is a simple node file that performs a scan of the dynamo db. 
+
+
