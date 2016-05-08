@@ -13,6 +13,27 @@ angular.module('locationApp', []).controller('LocationController', function ($ht
 	
 	lc.map = new google.maps.Map(document.getElementById('map'), mapOptions);
 	
+	lc.delivery_filter = 'all';
+	
+	lc.selectDeliveryDay = function(){
+		days_to_hide = lc.hideDays(lc.delivery_filter);
+		if(days_to_hide.length > 0){
+			console.log("."+days_to_hide.join(" ."));
+		}
+	};
+	
+	lc.hideDays = function(day){
+		var list = ['delivery-M', 'delivery-T', 'delivery-W', 'delivery-Th', 'delivery-F'];
+		var hide_list = [];
+		for(i = 0; i < list.length; i++){
+			if (list[i] != day){
+				hide_list.push(list[i]);
+			}
+		}
+
+		return hide_list;
+	};
+	
 	var abreviatedDays = {
 		"Monday": "M",
 		"Tuesday": "T",
@@ -23,7 +44,7 @@ angular.module('locationApp', []).controller('LocationController', function ($ht
 		"Sunday": "Su"
 	};
 	 
-	var responsePromise = $http.get("api.php");
+	var responsePromise = $http.get('https://f9koufluz6.execute-api.us-east-1.amazonaws.com/develop/location');
 	var infoWindow = new google.maps.InfoWindow();
 	var directionsDisplay = new google.maps.DirectionsRenderer();
 	
@@ -97,8 +118,6 @@ angular.module('locationApp', []).controller('LocationController', function ($ht
 		});
 	};
 	
-	
-	
 	$(window).resize(function() {
     	// (the 'map' here is the result of the created 'var map = ...' above)
     	var currCenter = lc.map.getCenter();
@@ -107,8 +126,9 @@ angular.module('locationApp', []).controller('LocationController', function ($ht
   	});
 	
 	responsePromise.success(function(data, status, headers, config) {
-		for(i = 0; i < data.length; i++) {
-			createMarker(data[i]);
+		locations = data['Items'];
+		for(i = 0; i < locations.length; i++) {
+			createMarker(locations[i]);
 		}
 	});
 	

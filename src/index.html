@@ -4,44 +4,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
     <title>Geocoding service</title>
-    <link rel="stylesheet" href="main.css" /> 
-    <script src="http://maps.googleapis.com/maps/api/js?key=" type="text/javascript"></script>
-	<script src="vendors.js" type="text/javascript"></script>
-	<script src="app.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="css/main.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+	<script src="js/app.js" type="text/javascript"></script>
   </head>
   <body ng-controller="LocationController as lc">
   	<div class="container-fluid">
+  		<div style="width:80%;background-color:black; color:white; font-weight:bold">
+  		<span style="margin-left:5px;">Powered by</span> <img src="images/powered_by.png" height="36px">
+  		</div>
 		<h3>Where to buy Heady Topper</h3>
+		<h4>Visit the <a href="http://alchemistbeer.com/">Alchemist</a> web site for more information</h4>
+		<p>view all code for this example on GitHub: <a href="https://github.com/eparker71/heady-locator">https://github.com/eparker71/heady-locator</a></p>
+		<br />
 		<div id="map"></div>
 		<br />
-		<div class="panel panel-info">
-			<div class="panel-heading">Route Info</div>
-				<div class="panel-body">
-					Location: <span ng-bind="storeName"></span><br />
-					Distance: <span ng-bind="distance"></span><br />
-					Duration: <span ng-bind="duration"></span>
+		
+		<div id="list">
+			<form role="form">
+					<div class="form-group">
+					<select name="singleSelect" 
+						    id="singleSelect" 
+						    ng-model="lc.delivery_filter" 
+						    ng-change="lc.selectDeliveryDay()">
+					  <option value="*">---Please select---</option>      
+					  <option value="delivery-M">Monday</option>
+					  <option value="delivery-T">Tuesday</option>
+					  <option value="delivery-W">Wednesday</option>
+					  <option value="delivery-Th">Thursday</option>
+					  <option value="delivery-F">Friday</option>     
+					</select>
 				</div>
+			
+				<span>Number of locations: {{lc.markers.length}}</span>
+				<ul id="searchlist" class="list-group">
+					<li class="list-group-item delivery-{{lc.getShortDay(marker.delivery)}}" 
+						ng-repeat="marker in lc.markers | orderBy :'title'">
+						<a href="#" ng-click="lc.openInfoWindow($event, marker)">{{marker.title | limitTo: 15 }}{{marker.title.length > 15 ? '...' : ''}}</a>&nbsp;&nbsp;
+					 	<!--<button 
+						type="button" 
+						class="btn btn-default btn-xs" 
+						ng-click="lc.displayRoute(marker)">Map Route</button>-->
+						<span class="badge">{{lc.getShortDay(marker.delivery)}}</span>
+					</li>
+				</ul>
+			</form>
 		</div>
-	
-		<form role="form">
-			<div class="form-group">
-				<input id="searchinput" class="form-control" type="search" placeholder="Search by delivery day..." />
-			</div>
-			<span>Number of locations: {{lc.markers.length}}</span>
-			<ul id="searchlist" class="list-group">
-				<li class="list-group-item" ng-repeat="marker in lc.markers | orderBy :'title'">
-					 <a href="#" ng-click="lc.openInfoWindow($event, marker)">{{marker.title | limitTo: 10 }}{{marker.title.length > 10 ? '...' : ''}}</a>&nbsp;&nbsp;
-					 <button type="button" class="btn btn-default btn-xs" ng-click="lc.displayRoute(marker)">
-					 Map Route
-					 </button>
-					 <span class="badge">{{lc.getShortDay(marker.delivery)}}</span>
-				</li>
-			</ul>
-		</form>
 	</div>
-	
-	<script>
-        $('#searchlist').btsListFilter('#searchinput', {itemChild: 'span'});
-    </script>
-  </body>
+</body>
 </html>

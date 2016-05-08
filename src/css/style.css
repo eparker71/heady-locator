@@ -1,36 +1,38 @@
-html,
-body {
-  height: 100%;
+body,html{
+	height:100%
 }
 
-#map {
-  min-width: 250px;
-  width: 80%;
-  min-height: 350px;
-  height: 80%;
-  border: 1px solid blue;
-  text-align: center;
-  margin-bottom: 1em;
+#list{
+	width:80%;
 }
 
-.delivery {
-	font-weight: bold;
+#map{
+	min-width:250px;
+	width:80%;
+	min-height:500px;
+	height:80%;
+	border:1px solid #00f;
+	text-align:center;
+	margin-bottom:1em
 }
 
-.infoWindowContent {
-	font-size:  1.2em !important;
-	border-top: 1px solid #ccc;
-	padding-top: .5em;
+.delivery{
+	font-weight:700
 }
 
-h4 {
+.infoWindowContent{
+	font-size:1.2em!important;
+	border-top:1px solid #ccc;
+	padding-top:.5em
+}
+
+h4{
 	margin-bottom:0;
-	margin-top: 0;
+	margin-top:0
 }
 
-ul {
-	list-style-type: none;
-  overflow:hidden; 
-  overflow-y:scroll;
+ul{
+	list-style-type:none;
+	overflow:hidden;
+	overflow-y:scroll
 }
-
