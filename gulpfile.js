@@ -5,19 +5,24 @@ var minifycss = require('gulp-minify-css');
 var jshint = require('gulp-jshint');
 //var Server = require('karma').Server;
 
-gulp.task('buildApp', function(){
-  return gulp.src('src/js/**/*.js')
-    .pipe(concat('app.js'))
+gulp.task('moveHTML', function(){
+  return gulp.src('src/**/*.html')
     .pipe(gulp.dest('app'));
 });
 
-gulp.task('buildVendor', function(){
+gulp.task('buildJs', function(){
+  return gulp.src('src/js/**/*.js')
+    .pipe(concat('app.js'))
+    .pipe(gulp.dest('app/js'));
+});
+
+gulp.task('buildVendorJs', function(){
   return gulp.src([
     'bower_components/jquery/dist/jquery.min.js',
     'bower_components/**/*.min.js'])
     .pipe(concat('vendors.js'))
     .pipe(uglify())
-    .pipe(gulp.dest('app'));
+    .pipe(gulp.dest('app/js'));
 });
 
 gulp.task('buildCSS', function(){
@@ -26,20 +31,16 @@ gulp.task('buildCSS', function(){
     'src/css/**/*.css'])
   .pipe(concat('main.css'))
   .pipe(minifycss())
-  .pipe(gulp.dest('app'));
+  .pipe(gulp.dest('app/css'));
 });
 
-gulp.task('movePHP', function(){
-   return gulp.src('src/*.php')
-	.pipe(gulp.dest('app'));
+gulp.task('movePNG', function(){
+  return gulp.src('src/**/*.png')
+    .pipe(gulp.dest('app/images'));
 });
 
-gulp.task('moveHTML', function(){
-  return gulp.src('src/**/*.html')
-    .pipe(gulp.dest('app'));
-});
 
-gulp.task('build', ['buildApp', 'buildVendor', 'buildCSS', 'moveHTML', 'movePHP']);
+gulp.task('build', ['moveHTML', 'buildJs', 'buildVendorJs', 'buildCSS', 'movePNG']);
 
 gulp.task('jshint', function(){
   return gulp.src(['src/js/**/*.js'])
