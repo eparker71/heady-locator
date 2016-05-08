@@ -13,24 +13,25 @@ angular.module('locationApp', []).controller('LocationController', function ($ht
 	
 	lc.map = new google.maps.Map(document.getElementById('map'), mapOptions);
 	
-	lc.delivery_filter = 'all';
+	lc.daysToShow = 'all';
+	
+	var daylist = ['delivery-M', 'delivery-T', 'delivery-W', 'delivery-Th', 'delivery-F'];
 	
 	lc.selectDeliveryDay = function(){
-		days_to_hide = lc.hideDays(lc.delivery_filter);
-		if(days_to_hide.length > 0){
-			console.log("."+days_to_hide.join(" ."));
+		$("*[class*='delivery']").show()
+		if(lc.daysToShow.indexOf('del') == 0){
+			var days_to_hide = lc.hideDays(lc.daysToShow);
+			$("."+days_to_hide.join(", .")).hide();
 		}
 	};
 	
 	lc.hideDays = function(day){
-		var list = ['delivery-M', 'delivery-T', 'delivery-W', 'delivery-Th', 'delivery-F'];
 		var hide_list = [];
-		for(i = 0; i < list.length; i++){
-			if (list[i] != day){
-				hide_list.push(list[i]);
+		for(i = 0; i < daylist.length; i++){
+			if (daylist[i] != day){
+				hide_list.push(daylist[i]);
 			}
 		}
-
 		return hide_list;
 	};
 	
