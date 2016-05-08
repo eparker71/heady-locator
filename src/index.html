@@ -44,7 +44,7 @@
 				<ul id="searchlist" class="list-group">
 					<li class="list-group-item delivery-{{lc.getShortDay(marker.delivery)}}" 
 						ng-repeat="marker in lc.markers | orderBy :'title'">
-						<a href="#" ng-click="lc.openInfoWindow($event, marker)">{{marker.title | limitTo: 15 }}{{marker.title.length > 15 ? '...' : ''}}</a>&nbsp;&nbsp;
+						<a href="#" ng-click="lc.openInfoWindow($event, marker)">{{marker.title | limitTo: 35 }}{{marker.title.length > 35 ? '...' : ''}}</a>&nbsp;&nbsp;
 					 	<!--<button 
 						type="button" 
 						class="btn btn-default btn-xs" 
