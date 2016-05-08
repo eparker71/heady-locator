@@ -13,15 +13,57 @@ angular.module('locationApp', []).controller('LocationController', function ($ht
 	
 	lc.map = new google.maps.Map(document.getElementById('map'), mapOptions);
 	
+	var abreviatedDays = {
+		"Monday": "M",
+		"Tuesday": "T",
+		"Wednesday": "W",
+		"Thursday": "Th",
+		"Friday": "F",
+		"Saturday": "Sa",
+		"Sunday": "Su"
+	};
+
+	var lookupDay = {
+		M: "Monday",
+		T: "Tuesday",
+		W: "Wednesday",
+		Th: "Thursday",
+		F: "Friday",
+		Sa: "Saturday",
+		Su: "Sunday"
+	};
+
 	lc.daysToShow = 'all';
 	
 	var daylist = ['delivery-M', 'delivery-T', 'delivery-W', 'delivery-Th', 'delivery-F'];
 	
 	lc.selectDeliveryDay = function(){
+		
+		for(i = 0; i < lc.markers.length; i++){
+			lc.markers[i].setVisible(true);
+		}
 		$("*[class*='delivery']").show()
+		
 		if(lc.daysToShow.indexOf('del') == 0){
 			var days_to_hide = lc.hideDays(lc.daysToShow);
 			$("."+days_to_hide.join(", .")).hide();
+		}
+		
+		if(lc.daysToShow.indexOf('-') > 0){
+			var res = lc.daysToShow.split("-");
+			
+			var day = lookupDay[res[1]];
+			console.log(day);
+			
+			for(i = 0; i < lc.markers.length; i++){
+				//console.log(lc.markers[i].delivery+' '+day);
+				if(lc.markers[i].delivery.indexOf(day)!=0){
+					lc.markers[i].setVisible(false);
+				}
+				else {
+					lc.markers[i].setVisible(true);
+				}
+			}
 		}
 	};
 	
@@ -35,15 +77,7 @@ angular.module('locationApp', []).controller('LocationController', function ($ht
 		return hide_list;
 	};
 	
-	var abreviatedDays = {
-		"Monday": "M",
-		"Tuesday": "T",
-		"Wednesday": "W",
-		"Thursday": "Th",
-		"Friday": "F",
-		"Saturday": "Sa",
-		"Sunday": "Su"
-	};
+
 	 
 	var responsePromise = $http.get('https://f9koufluz6.execute-api.us-east-1.amazonaws.com/develop/location');
 	var infoWindow = new google.maps.InfoWindow();
