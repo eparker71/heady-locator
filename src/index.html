@@ -25,7 +25,9 @@
 		<div id="list">
 			<form role="form">
 					<div class="form-group">
-					<select name="singleSelect" 
+					<label for="filter-by-day">Filter by delivery day: </label>
+					<select id="filter-by-day"
+							name="singleSelect" 
 						    id="singleSelect" 
 						    ng-model="lc.daysToShow" 
 						    ng-change="lc.selectDeliveryDay()">
