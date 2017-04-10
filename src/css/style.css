@@ -36,3 +36,14 @@ ul{
 	overflow:hidden;
 	overflow-y:scroll
 }
+
+.header-div {
+    width:80%;
+    background-color:black; 
+    color:white; 
+    font-weight:bold; 
+    height: 38px;
+}
+.header-img {
+	height: 36px;
+}

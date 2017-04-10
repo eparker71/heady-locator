@@ -9,6 +9,34 @@ import boto3
 
 print('Loading function')
 
+def delete_and_recreate_table(dynamodb):
+    resp = dynamodb.describe_table(
+            TableName='Locations'
+        )
+    table_def = resp['Table']
+    table_status = table_def['TableStatus']
+    
+    if table_status in 'ACTIVE':
+        try:
+            dynamodb.delete_table(
+                TableName='Locations'
+            )
+            
+            dynamodb.create_table(
+                AttributeDefinitions=table_def['AttributeDefinitions'],
+                TableName='Locations',
+                KeySchema=table_def['KeySchema'],
+                LocalSecondaryIndexes=table_def['LocalSecondaryIndexes'],
+                GlobalSecondaryIndexes=table_def['GlobalSecondaryIndexes'],
+                ProvisionedThroughput=table_def['ProvisionedThroughput'],
+                StreamSpecification=table_def['StreamSpecification'],
+            )
+        except ResourceInUseException as riu:
+        	pass
+        except ResourceNotFoundException as rnf:
+        	pass
+
+
 def get_locations():
     page = requests.get('http://alchemistbeer.com/buy/')
     content = page.text
@@ -27,9 +55,9 @@ def get_locations():
     return loc_list
 
 def get_map_key():
-	"""
-	The google map api key is stored in KMS
-	"""
+    """
+    The google map api key is stored in KMS
+    """
     s3client = boto3.client('s3')
     s3obj = s3client.get_object(Bucket='hopsale', Key='encrypted-secret')
     kmsclient = boto3.client('kms')
