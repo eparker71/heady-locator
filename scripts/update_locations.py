@@ -9,33 +9,7 @@ import boto3
 
 print('Loading function')
 
-def delete_and_recreate_table(dynamodb):
-    resp = dynamodb.describe_table(
-            TableName='Locations'
-        )
-    table_def = resp['Table']
-    table_status = table_def['TableStatus']
-    
-    if table_status in 'ACTIVE':
-        try:
-            dynamodb.delete_table(
-                TableName='Locations'
-            )
-            
-            dynamodb.create_table(
-                AttributeDefinitions=table_def['AttributeDefinitions'],
-                TableName='Locations',
-                KeySchema=table_def['KeySchema'],
-                LocalSecondaryIndexes=table_def['LocalSecondaryIndexes'],
-                GlobalSecondaryIndexes=table_def['GlobalSecondaryIndexes'],
-                ProvisionedThroughput=table_def['ProvisionedThroughput'],
-                StreamSpecification=table_def['StreamSpecification'],
-            )
-        except ResourceInUseException as riu:
-        	pass
-        except ResourceNotFoundException as rnf:
-        	pass
-
+GMAP_API_KEY = 'AIzaSyBMjY7LIkD44Dxbj8fVK4WK_jGYZSnFjZs'
 
 def get_locations():
     page = requests.get('http://alchemistbeer.com/buy/')
@@ -54,46 +28,42 @@ def get_locations():
         loc_list.append(loc_dict)
     return loc_list
 
-def get_map_key():
-    """
-    The google map api key is stored in KMS
-    """
-    s3client = boto3.client('s3')
-    s3obj = s3client.get_object(Bucket='hopsale', Key='encrypted-secret')
-    kmsclient = boto3.client('kms')
-    kmsmapkey = kmsclient.decrypt(CiphertextBlob=s3obj['Body'].read())
-    return kmsmapkey['Plaintext']
-    
+
 def geocode_locations(loc_list):
-    gmapkey = get_map_key()
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('Locations')
     with table.batch_writer() as batch:
         for l in loc_list:
-            url = "https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=%s" % (l['street'], gmapkey)
-            r = requests.get(url).json()
-            time.sleep(1) 
-            if len(r['results']) > 0:
-                l["lat"] = str(r['results'][0]['geometry']['location']['lat'])
-                l["lng"] = str(r['results'][0]['geometry']['location']['lng'])
-                print(l)
-                batch.put_item(Item=l)
-    
-# the lambda_handler is used by AWS lambda to run the script
-def lambda_handler(event, context):
-    print("Getting locations...")
-    locations = get_locations()
-    print("Geocoding locations...")
-    geocoded_locations = geocode_locations(locations)
+            if l.get('street'):
+                url = "https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=%s" % (l.get('street'), GMAP_API_KEY)
+                r = requests.get(url).json()
+                time.sleep(1)
+                if len(r['results']) > 0:
+                    l["lat"] = str(r['results'][0]['geometry']['location']['lat'])
+                    l["lng"] = str(r['results'][0]['geometry']['location']['lng'])
+                    print(l)
+                    batch.put_item(Item=l)
 
-#You can also uncomment the following lines to run this script from
-#the command line. 
+
+def lambda_handler(event, context):
+    #print("Getting locations...")
+    locations = get_locations()
+    #print("Geocoding locations...")
+    geocoded_locations = geocode_locations(locations)
+    message = '{} Locations updated...'.format(len(locations))
+    sns = boto3.client('sns', region_name='us-east-1')
+    response = sns.publish(TopicArn='arn:aws:sns:us-east-1:111326002412:api-view', Message=message)
+
+
 # def main():
 #     print("Getting locations...")
 #     locations = get_locations()
 #     print("Geocoding locations...")
 #     geocoded_locations = geocode_locations(locations)
-#    
-#     
+#     message = '{} Locations updated...'.format(len(locations))
+#     sns = boto3.client('sns', region_name='us-east-1')
+#     response = sns.publish(TopicArn='arn:aws:sns:us-east-1:111326002412:api-view', Message=message)
+# 
+# 
 # if __name__ == "__main__":
 #     main()
