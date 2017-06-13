@@ -30,6 +30,6 @@ The code is a little rough at the moment, but it works, and should be relatively
 You will need to have node installed before you start.
 ```
 npm install 
-bower install
-gulp build
+node_modules/bower/bower install
+node_modules/gulp/bin/gulp.js build
 ```
