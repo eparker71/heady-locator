@@ -9,7 +9,7 @@ import boto3
 
 print('Loading function')
 
-GMAP_API_KEY = 'AIzaSyBMjY7LIkD44Dxbj8fVK4WK_jGYZSnFjZs'
+GMAP_API_KEY = 'add your key'
 
 
 def get_locations():
