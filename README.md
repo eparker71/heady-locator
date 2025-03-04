@@ -4,6 +4,7 @@ Displays a map and list of all the locations that sell the beer Heady Topper.
 Locations are scraped from page http://alchemistbeer.com/buy/
 
 Allows users to see how far away any location is by mapping the route from the users current location. The list is sorted by name, but it can be filtered by the delivery day which appears as a badge.
+![image](https://github.com/user-attachments/assets/f0bbb73d-4496-4938-ba42-c276136eb25a)
 
 I created this project to get familiar with some new technologies. 
 
